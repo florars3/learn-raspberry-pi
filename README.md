@@ -7,6 +7,7 @@ Made by [Ripudaman Flora](https://github.com/florars3).
 ## Languages and settings
 
 - 10 languages: English, Spanish, Portuguese (Brazil), French, Italian, German, Dutch, Polish, Turkish and Indonesian. Lessons, explainers, labels and code comments are translated; the simulator's own hints in the terminal are translated too, while real Linux and Python messages stay in English, as they would on a real Pi. Each language is a JSON file in `public/i18n/`, loaded only when picked. The site follows the browser's language on first visit.
+- Header: on desktop a progress card sits at the top right of the board and the credit runs up the left rail. On phones and tablets there is a header with the title and progress card, and the menu becomes a bar along the bottom of the screen (icons only on phones).
 - Theme: Auto (follows the device), Light or Dark, from the sun/moon button on the rail or in Settings.
 - Settings: theme, language, callout labels, current flow on wires, floor grid, turntable, sound, reduce motion, 3D or flat board, angled view and reset progress.
 
