@@ -2,6 +2,13 @@
 
 A Raspberry Pi in your browser, no hardware needed. 16 beginner lessons on a 3D Raspberry Pi 5: wire a circuit, edit Python, run it, use a simulated terminal, and step through 7 animated "How it works" explainers. No install, no backend.
 
+Made by [Ripudaman Flora](https://github.com/florars3).
+
+## Languages and settings
+
+- 10 languages: English, Spanish, Portuguese (Brazil), French, Italian, German, Dutch, Polish, Turkish and Indonesian. Lessons, explainers, labels and code comments are translated; terminal output stays in English. Each language is a JSON file in `public/i18n/`, loaded only when picked. The site follows the browser's language on first visit.
+- Settings: language, callout labels, current flow on wires, floor grid, turntable, sound, reduce motion, 3D or flat board, angled view and reset progress.
+
 It is a static site: everything lives in `public/`.
 
 ## Run locally
