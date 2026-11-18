@@ -414,6 +414,11 @@ html:not(.reduce-motion) body,html:not(.reduce-motion) .panel,html:not(.reduce-m
 .rail-credit:hover,.rail-credit:hover b{color:var(--accent)}
 @media (max-height: 760px){.rail-credit{display:none}}
 .mhead{display:none}
+.d-prog{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 14px;border:1px solid var(--line);border-radius:12px;background:var(--mat)}
+.d-prog-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.d-prog-t b{font-size:13.5px}
+.reset-btn.armed{background:var(--accent);color:var(--accent-ink, #fff);border-color:var(--accent)}
+.reset-btn:disabled{opacity:.45;cursor:default}
 .hero .tag span{white-space:nowrap}
 @media (max-width: 1240px) and (min-width: 981px){.stage-top .pcard{width:150px;padding:8px 10px;gap:8px}.stage-top .pc-g{display:none}.hero{max-width:min(64%, calc(100% - 190px))}}
 
@@ -2448,9 +2453,11 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if
 const GH_URL='https://github.com/florars3';
 function creditHTML(){return `<p class="set-credit">${esc(t('credit.madeBy'))} <a href="${GH_URL}" target="_blank" rel="noopener">Ripudaman Flora</a> · <a href="${GH_URL}" target="_blank" rel="noopener">github.com/florars3</a></p>`}
 
+function resetProgress(){done.clear();store.set('done',[]);LESSONS.forEach(l=>store.set('code:'+l.id,null));renderProgress();renderTab()}
+function bindReset(rb,after){rb.onclick=()=>{if(rb.dataset.armed){delete rb.dataset.armed;resetProgress();rb.textContent=t('set.cleared');rb.classList.remove('armed');if(after)setTimeout(after,900)}else{rb.dataset.armed='1';rb.classList.add('armed');rb.textContent=t('set.resetConfirm');setTimeout(()=>{if(rb.dataset.armed){delete rb.dataset.armed;rb.classList.remove('armed');rb.textContent=t('set.reset')}},3000)}}}
 /* ---------- Drawer (lessons, parts, pinout, explainers, language, settings) ---------- */
 function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p class="d-intro">${s}</p>`;
-  if(drawerView==='lessons'){tt.textContent=t('drawer.lessons');b.innerHTML=GROUPS.map(g=>{const ls=LESSONS.filter(l=>l.group===g);const dn=ls.filter(l=>done.has(l.id)).length;return `<div class="d-group"><span>${esc(t('group.'+g))}</span><span>${dn}/${ls.length}</span></div>`+ls.map(l=>`<button class="lesson-item ${done.has(l.id)?'done':''} ${l.n-1===cur?'cur':''}" data-open="${l.n-1}"><span class="num">${done.has(l.id)?'✓':l.n}</span><span><span class="t">${esc(l.title)}</span><br><span class="s">${esc(l.short)}</span></span></button>`).join('')}).join('');$$('[data-open]',b).forEach(x=>x.onclick=()=>{openLesson(+x.dataset.open);if(innerWidth<980)closeDrawer()})}
+  if(drawerView==='lessons'){tt.textContent=t('drawer.lessons');const pct=Math.round(100*done.size/LESSONS.length);b.innerHTML=`<div class="d-prog"><div class="d-prog-t"><b>${esc(t('panel.progress',{done:done.size,total:LESSONS.length}))}</b><span class="pc-bar"><i style="width:${pct}%"></i></span></div><button class="btn small reset-btn" id="dReset"${done.size?'':' disabled'}>${esc(t('set.reset'))}</button></div>`+GROUPS.map(g=>{const ls=LESSONS.filter(l=>l.group===g);const dn=ls.filter(l=>done.has(l.id)).length;return `<div class="d-group"><span>${esc(t('group.'+g))}</span><span>${dn}/${ls.length}</span></div>`+ls.map(l=>`<button class="lesson-item ${done.has(l.id)?'done':''} ${l.n-1===cur?'cur':''}" data-open="${l.n-1}"><span class="num">${done.has(l.id)?'✓':l.n}</span><span><span class="t">${esc(l.title)}</span><br><span class="s">${esc(l.short)}</span></span></button>`).join('')}).join('');$$('[data-open]',b).forEach(x=>x.onclick=()=>{openLesson(+x.dataset.open);if(innerWidth<980)closeDrawer()});bindReset($('#dReset'),()=>{if(drawerView==='lessons')renderDrawer()})}
   if(drawerView==='components'){tt.textContent=t('drawer.parts');b.innerHTML=intro(esc(t('drawer.partsIntro')))+COMPONENTS.map(c=>`<div class="comp">${compIcon(c.icon)}<div><h4>${esc(c.name)}</h4><p>${esc(c.desc)}</p><div class="uses">${c.uses==='all'?`<span style="font-size:12px;color:var(--muted)">${esc(t('drawer.everyLesson'))}</span>`:c.uses.map(id=>{const l=LESSONS.find(x=>x.id===id);return `<button data-open="${l.n-1}">${l.n}. ${esc(l.title)}</button>`}).join('')}</div></div></div>`).join('');$$('[data-open]',b).forEach(x=>x.onclick=()=>{openLesson(+x.dataset.open);closeDrawer()})}
   if(drawerView==='pinout'){tt.textContent=t('drawer.pinout');b.innerHTML=`<p style="font-size:13.5px;margin-top:0">${esc(t('drawer.pinoutIntro'))}</p>${pinGridHTML(null)}<div class="callout warn">${t('drawer.pinoutWarn')}</div>`;bindPinGrid(b)}
   if(drawerView==='explain'){tt.textContent=t('drawer.explain');b.innerHTML=intro(esc(t('drawer.explainIntro')))+XPS.map(x=>{const ls=x.lessons.map(id=>LESSONS.find(l=>l.id===id)).filter(Boolean);const list=ls.map(l=>l.n).join(' '+t('drawer.and')+' ');return `<button class="lesson-item" data-xpo="${x.id}"><span class="num">${PLAY_ICON}</span><span><span class="t">${esc(x.title)}</span><br><span class="s">${esc(t(ls.length>1?'drawer.explainMetaPl':'drawer.explainMeta',{n:x.steps.length,list}))}</span></span></button>`}).join('');$$('[data-xpo]',b).forEach(x=>x.onclick=()=>XP.open(x.dataset.xpo))}
@@ -2469,7 +2476,7 @@ function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p c
     tog('sCo','callouts',()=>{if(Scene3D.ok)Scene3D.setCallouts(SETTINGS.callouts)});tog('sFlow','flow');tog('sGrid','grid',applyGrid);tog('sTurn','turn',()=>{if(Scene3D.ok)Scene3D.poke()});
     tog('sSound','sound',()=>{if(SETTINGS.sound)Audio_.ensure();try{Audio_.ctx&&Audio_.ctx.resume()}catch(_){}});tog('sMotion','motion',applyMotion);tog('sTilt','tilt',()=>Scene.setTilt(SETTINGS.tilt));
     $('#sFlat').onclick=async()=>{SETTINGS.flat=MODE==='3d';store.set('flat',SETTINGS.flat);await stopRun(true);setMode(SETTINGS.flat?'2d':'3d');await openLesson(cur,true);renderDrawer()};
-    const rb=$('#sReset');rb.onclick=()=>{if(rb.dataset.armed){done.clear();store.set('done',[]);LESSONS.forEach(l=>store.set('code:'+l.id,null));rb.textContent=t('set.cleared');delete rb.dataset.armed;renderProgress();renderTab()}else{rb.dataset.armed='1';rb.textContent=t('set.resetConfirm');setTimeout(()=>{if(rb.dataset.armed){delete rb.dataset.armed;rb.textContent=t('set.reset')}},3000)}}}
+    bindReset($('#sReset'))}
 }
 
 
