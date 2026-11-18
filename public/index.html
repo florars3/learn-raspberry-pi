@@ -7,12 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>try{var th=JSON.parse(localStorage.getItem('lrp:theme'));if(th==='light'||th==='dark')document.documentElement.setAttribute('data-theme',th)}catch(e){}</script>
 <meta name="author" content="Ripudaman Flora">
 <meta name="description" content="A Raspberry Pi in your browser, no hardware needed. Wire LEDs, buttons, sensors and a servo on a 3D Raspberry Pi 5, write Python, run it in a simulated terminal, and step through how it all works. 16 free beginner lessons in 10 languages. Made by Ripudaman Flora.">
 <meta name="theme-color" content="#d9e0e7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f161d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Learn Pi">
 <link rel="canonical" href="https://learn-raspberry-pi.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Learn Raspberry Pi">
@@ -383,6 +386,15 @@ html.reduce-motion *,html.reduce-motion *::before,html.reduce-motion *::after{tr
   .p-head h2{font-size:23px}
   .bar{left:8px;right:8px;bottom:8px}
 }
+
+:root[data-theme="light"]{color-scheme:light}
+.rail-btn .ic-sun{display:none}.rail-btn.is-dark .ic-sun{display:block}.rail-btn.is-dark .ic-moon{display:none}
+.seg{display:inline-flex;flex:none;gap:2px;padding:3px;border-radius:999px;background:var(--mat);border:1px solid var(--line)}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:12.5px;padding:5px 11px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px var(--shadow);font-weight:600}
+@media (max-width: 600px){.rail-btn[data-nav="run"],#themeBtn,.rail-btn[data-nav="lang"]{display:none}.rail{gap:0;padding:6px}.rail-btn{flex:1 1 0;min-width:0;font-size:9.5px;letter-spacing:0;padding:7px 1px 6px}.rail-btn span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+html:not(.reduce-motion) body,html:not(.reduce-motion) .panel,html:not(.reduce-motion) .rail,html:not(.reduce-motion) .drawer{transition:background-color .25s ease,color .25s ease,border-color .25s ease}
 </style>
 
 <div class="app">
@@ -397,6 +409,7 @@ html.reduce-motion *,html.reduce-motion *::before,html.reduce-motion *::after{tr
     <button class="rail-btn" data-nav="explain" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.6l5 3.4-5 3.4z" fill="currentColor"/></svg><span data-i18n="nav.explain">Explain</span></button>
     <button class="rail-btn" data-nav="run" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8 5l11 7-11 7z"/></svg><span data-i18n="nav.run">Run</span></button>
     <div class="rail-spacer"></div>
+    <button class="rail-btn" id="themeBtn" type="button"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.2A8 8 0 0 1 9.8 4.5a8 8 0 1 0 9.7 9.7z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg><span data-i18n="nav.theme">Theme</span></button>
     <button class="rail-btn" data-nav="settings" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span data-i18n="nav.settings">Settings</span></button>
     <button class="rail-btn" data-nav="lang" aria-pressed="false"><span class="globe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.9 5.2 3.9 8.5s-1.3 6.1-3.9 8.5c-2.6-2.4-3.9-5.2-3.9-8.5s1.3-6.1 3.9-8.5z"/></svg><b id="langCode">EN</b></span><span data-i18n="nav.lang">Language</span></button>
   </nav>
@@ -513,6 +526,30 @@ const UI_EN={
 'set.angled':'Angled view','set.angledSub':'Off looks straight down at the board.','set.reset':'Reset progress','set.resetSub':'Clears the done marks and your edited code.','set.resetConfirm':'Tap again to confirm','set.cleared':'Cleared',
 'set.saved':'Progress and code are saved in this browser only.','set.unofficial':'An unofficial learning project. Not affiliated with or endorsed by Raspberry Pi Ltd. Raspberry Pi is a trademark of Raspberry Pi Ltd.',
 'set.langFail':'Couldn’t load that language. Check your connection and try again.','set.only3d':'Works with the 3D board.',
+'nav.theme':'Theme','nav.toLight':'Switch to light theme','nav.toDark':'Switch to dark theme',
+'set.theme':'Theme','set.themeSub':'Auto follows your device','set.thAuto':'Auto','set.thLight':'Light','set.thDark':'Dark',
+'sim.help':'Commands you can try:','sim.pipe':'not available in this simulator',
+'sim.nano':'{cmd} is a full-screen editor. On a real Pi it opens here; in this simulator, edit .py files in the Code tab.',
+'sim.keep':'({a} belongs to a lesson, so the simulator keeps it.)',
+'sim.repl':'Interactive Python isn’t available here. Run a file: python3 blink.py',
+'sim.poweroff':'The system will power off now. (The simulator turns it back on for you.)',
+'sim.renamed':'{cmd} has been renamed. Use {to} instead.',
+'sim.noCam':'Open the “Take a photo” lesson to connect a camera.',
+'sim.preview':'Preview running for 5 seconds…','sim.tipO':'Tip: add -o photo.jpg to save the picture.',
+'sim.saved':'Saved {o} in {where}','sim.thisFolder':'this folder',
+'sim.ssh':'You are already logged in to raspberrypi. From another computer you would run: ssh pi@raspberrypi.local',
+'sim.man':'man pages aren’t installed in this simulator. Try {cmd} --help on a real Pi.',
+'sim.reconnected':'Reconnected.','sim.booted':'Raspberry Pi OS booted. Logged back in as pi.','sim.svcBoot':'systemd started blink.service at boot.',
+'sim.owner':'{file} is wired up in lesson {n}, “{title}”. Open that lesson to run it on its circuit.',
+'sim.busy':'A program is running. Stop it first.','sim.busyCtrlC':'A program is running. Press Ctrl+C or Stop first.',
+'sim.finished':'Program finished. Event handlers only run while the script is alive, so end with pause().',
+'sim.callNow':'line {L} calls {nm}() straight away and stores its result (None). Drop the brackets to hand over the function itself: {fix}',
+'sim.skipped':'line {L}: “{code}” isn’t supported by the simulator and was skipped.',
+'sim.fnParams':'line {L}: functions with parameters aren’t supported in the simulator.',
+'sim.forRange':'line {L}: this simulator only runs for loops over range(), so that loop was skipped.',
+'sim.noWireOut':'nothing is wired to GPIO{pin} in this lesson, so this {cls} won’t show anything.','sim.wantOut':'The {what} is on {pins}.',
+'sim.noWireIn':'nothing is wired to GPIO{pin}, so this {cls} will never trigger.','sim.wantIn':'It’s wired to {pins}.',
+'sim.buzzer':'buzzer',
 'xp.eyebrow':'How it works · Step {i} of {n}','xp.close':'Close','xp.done':'Done','xp.step':'Step {n}','xp.swipe':'Swipe the diagram sideways to see all of it.','xp.diagram':'Animated diagram',
 'tip.button':'Push button','tip.buttonSub':'Click and hold to press.','tip.pir':'PIR motion sensor','tip.pirSub':'Click to wave a hand in front of it.','tip.pin':'Pin {n} · {name}','tip.thisLesson':'This lesson: {what}','tip.wire':'Wire from pin {n}',
 'tip.led.red':'Red LED','tip.led.amber':'Amber LED','tip.led.green':'Green LED','tip.ledSub':'The longer leg (anode) connects to the GPIO wire. The shorter leg goes to the resistor.',
@@ -533,6 +570,7 @@ const UI_EN={
 };
 let LANG='en',UI={};
 function t(k,v){let s=UI[k]??UI_EN[k]??k;if(v)s=s.replace(/\{(\w+)\}/g,(_,n)=>v[n]??'');return s}
+function tx(k,v){return t(k,v)}
 function RM(){try{return !!SETTINGS.motion}catch(e){return false}}
 
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -1230,7 +1268,7 @@ class Interp{
     this.src=src.split('\n');let tree;
     try{tree=parseProgram(src)}catch(e){this.traceback(e);return 'error'}
     try{await this.block(tree.children,null);
-      if(this.handlers&&this.alive)this.io.dim('Program finished. Event handlers only run while the script is alive, so end with pause().');
+      if(this.handlers&&this.alive)this.io.dim(tx('sim.finished'));
       return 'done'}
     catch(e){if(e instanceof Stop)return 'stopped';if(e instanceof PyErr){this.traceback(e);return 'error'}if(e instanceof Brk||e instanceof Cont){this.traceback(new PyErr('SyntaxError',`'${e instanceof Brk?'break':'continue'}' outside loop`,0));return 'error'}if(e instanceof Ret){this.traceback(new PyErr('SyntaxError',"'return' outside function",0));return 'error'}console.error(e);this.io.err('sim: something went wrong inside the simulator: '+e.message);return 'error'}
     finally{this.alive=false;for(const w of [...this.waiters])w();this.waiters.clear()}
@@ -1250,16 +1288,16 @@ class Interp{
     if(m=t.match(/^import\s+(.+)$/)){for(const part of m[1].split(',')){const mod=part.trim().split(/\s+as\s+/)[0];this.checkModule(mod,L);this.modules.add(mod)}return}
     if(m=t.match(/^while\s+(.+):$/))return this.whileLoop(m[1],n,local);
     if(m=t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+range\((.*)\)\s*:$/))return this.forLoop(m[1],m[2],n,local);
-    if(/^for\b/.test(t)){this.note(`line ${L}: this simulator only runs for loops over range(), so that loop was skipped.`);return}
+    if(/^for\b/.test(t)){this.note(tx('sim.forRange',{L}));return}
     if(m=t.match(/^def\s+([A-Za-z_]\w*)\s*\(\s*\)\s*:$/)){this.funcs[m[1]]={body:n.children,line:L};if(this.pendingRoute!=null){this.routes.push({path:this.pendingRoute,fn:m[1]});this.pendingRoute=null}return}
-    if(/^def\b/.test(t)){this.note(`line ${L}: functions with parameters aren't supported in the simulator.`);return}
+    if(/^def\b/.test(t)){this.note(tx('sim.fnParams',{L}));return}
     if(m=t.match(/^@(\w+)\.route\((.+)\)$/)){this.pendingRoute=String(this.ev(splitArgs(m[2])[0],n,local));return}
     if(/^global\s+/.test(t)){if(local){local.__g=local.__g||new Set();t.replace(/^global\s+/,'').split(',').forEach(x=>local.__g.add(x.trim()))}return}
     if(t==='pass')return;if(t==='break')throw new Brk();if(t==='continue')throw new Cont();
     if(m=t.match(/^return(?:\s+(.+))?$/))throw new Ret(m[1]?this.ev(m[1],n,local):null);
     if(m=t.match(/^([A-Za-z_][\w.]*)\s*(\+=|-=|\*=|\/=|=)(?!=)\s*(.+)$/))return this.assign(m[1],m[2],m[3],n,local);
     if(m=t.match(/^([A-Za-z_][\w.]*)\s*\(([\s\S]*)\)$/)){await this.call(m[1],m[2],n,local);return}
-    if(t.endsWith(':')){this.note(`line ${L}: "${t}" isn't supported by the simulator and was skipped.`);return}
+    if(t.endsWith(':')){this.note(tx('sim.skipped',{L,code:t}));return}
     this.ev(t,n,local);
   }
   checkModule(mod,L){if(!(mod in MODULES))throw new PyErr('ModuleNotFoundError',`No module named '${mod}'`,L)}
@@ -1282,8 +1320,8 @@ class Interp{
   wiredDesc(type){const w=this.wiring;const list=[];for(const k in w.outputs)if(w.outputs[k].type===type)list.push('GPIO'+k);for(const k in w.inputs)if(w.inputs[k].type===type)list.push('GPIO'+k);return list}
   construct(cls,argstr,n,local,name){const L=n.line;if(!this.names.has(cls))throw new PyErr('NameError',`name '${cls}' is not defined`,L);const {args,kw}=this.parseArgs(argstr,n,local);const d=new Dev(cls,name);const w=this.wiring;
     switch(cls){
-      case 'LED':case 'PWMLED':case 'Buzzer':{d.pin=this.claim(args[0]??kw.pin,d,L);d.value=0;d.bg=null;if(!w.outputs[d.pin]){const want=this.wiredDesc(cls==='Buzzer'?'buzzer':'led');this.note(`nothing is wired to GPIO${d.pin} in this lesson, so this ${cls} won't show anything.${want.length?` The ${cls==='Buzzer'?'buzzer':'LED'} is on ${want.join(', ')}.`:''}`)}break}
-      case 'Button':case 'MotionSensor':{d.pin=this.claim(args[0]??kw.pin,d,L);d.h={};if(!w.inputs[d.pin]){const want=this.wiredDesc(cls==='Button'?'button':'pir');this.note(`nothing is wired to GPIO${d.pin}, so this ${cls} will never trigger.${want.length?` It's wired to ${want.join(', ')}.`:''}`)}break}
+      case 'LED':case 'PWMLED':case 'Buzzer':{d.pin=this.claim(args[0]??kw.pin,d,L);d.value=0;d.bg=null;if(!w.outputs[d.pin]){const want=this.wiredDesc(cls==='Buzzer'?'buzzer':'led');this.note(tx('sim.noWireOut',{pin:d.pin,cls})+(want.length?' '+tx('sim.wantOut',{what:cls==='Buzzer'?tx('sim.buzzer'):'LED',pins:want.join(', ')}):''))}break}
+      case 'Button':case 'MotionSensor':{d.pin=this.claim(args[0]??kw.pin,d,L);d.h={};if(!w.inputs[d.pin]){const want=this.wiredDesc(cls==='Button'?'button':'pir');this.note(tx('sim.noWireIn',{pin:d.pin,cls})+(want.length?' '+tx('sim.wantIn',{pins:want.join(', ')}):''))}break}
       case 'DistanceSensor':{const echo=kw.echo??args[0],trig=kw.trigger??args[1];if(echo==null||trig==null)throw new PyErr('TypeError',"DistanceSensor needs both echo and trigger pins",L);d.echo=this.claim(echo,d,L);d.trig=this.claim(trig,d,L);d.pin=d.echo;d.max=kw.max_distance??1;d.thr=kw.threshold_distance??0.3;d.h={};d.ok=!!(w.distance&&w.distance.echo===d.echo&&w.distance.trig===d.trig);if(!d.ok)this.note(w.distance?`the sensor is wired with echo=${w.distance.echo}, trigger=${w.distance.trig}. With these pins you'll only read the maximum distance.`:'no distance sensor is wired in this lesson.');d.inRange=null;this.sonar(true);break}
       case 'AngularServo':case 'Servo':{d.pin=this.claim(args[0]??kw.pin,d,L);d.min=kw.min_angle??-90;d.max=kw.max_angle??90;d.angle=cls==='Servo'?0:0;d.ok=w.servo===d.pin;if(!d.ok)this.note(w.servo!=null?`the servo signal wire is on GPIO${w.servo}, not GPIO${d.pin}.`:'no servo is wired in this lesson.');if(d.ok){Scene.setServo(0)}break}
       case 'Picamera2':{if(!w.camera)throw new PyErr('IndexError','list index out of range (no camera connected)',L);d.started=false;break}
@@ -1315,7 +1353,7 @@ class Interp{
     if(!valid.includes(attr))throw new PyErr('AttributeError',`'${d.cls}' object has no attribute '${attr}'`,L);
     let h=null,m;
     if(rhs==='None')h=null;
-    else if(m=rhs.match(/^([A-Za-z_][\w.]*)\s*\(\s*\)$/)){const nm=m[1];this.io.warn(`sim: line ${L} calls ${nm}() straight away and stores its result (None). Drop the brackets to hand over the function itself: ${d.name}.${attr} = ${nm}`);this.callNow=nm;h=null;return this.callAndForget(nm,n,local).then(()=>{d.h[attr]=null})}
+    else if(m=rhs.match(/^([A-Za-z_][\w.]*)\s*\(\s*\)$/)){const nm=m[1];this.io.warn('sim: '+tx('sim.callNow',{L,nm,fix:`${d.name}.${attr} = ${nm}`}));this.callNow=nm;h=null;return this.callAndForget(nm,n,local).then(()=>{d.h[attr]=null})}
     else if(/^[A-Za-z_]\w*$/.test(rhs)){if(this.funcs[rhs])h={fn:rhs};else{this.resolve(rhs,n,local);throw new PyErr('TypeError',`'${rhs}' is not callable`,L)}}
     else if(m=rhs.match(/^([A-Za-z_]\w*)\.(\w+)$/)){const obj=this.resolve(m[1],n,local);if(!(obj instanceof Dev))throw new PyErr('AttributeError',`'${typeName(obj)}' object has no attribute '${m[2]}'`,L);h={dev:obj,method:m[2]}}
     else throw new PyErr('SyntaxError','invalid syntax',L);
@@ -1441,14 +1479,14 @@ For further information, please refer to https://pinout.xyz/`}
 async function shell(raw){
   const line=raw.trim();if(!line)return;
   SH.hist.push(line);if(SH.hist.length>80)SH.hist.shift();store.set('hist',SH.hist);SH.hi=-1;
-  if(line.includes('|')){const [left,...pipes]=line.split('|').map(s=>s.trim());const buf=[];await runCmd(left,t=>buf.push(...String(t).split('\n')));let lines=buf;for(const p of pipes){const m=p.match(/^grep\s+(?:-i\s+)?["']?(.+?)["']?$/);if(m){const re=new RegExp(m[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),/-i/.test(p)?'i':'');lines=lines.filter(l=>re.test(l))}else if(/^head/.test(p))lines=lines.slice(0,10);else if(/^wc\s+-l/.test(p))lines=[String(lines.length)];else{T.err(`bash: ${p.split(' ')[0]}: not available in this simulator`);return}}lines.forEach(l=>T.out(l));return}
+  if(line.includes('|')){const [left,...pipes]=line.split('|').map(s=>s.trim());const buf=[];await runCmd(left,t=>buf.push(...String(t).split('\n')));let lines=buf;for(const p of pipes){const m=p.match(/^grep\s+(?:-i\s+)?["']?(.+?)["']?$/);if(m){const re=new RegExp(m[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),/-i/.test(p)?'i':'');lines=lines.filter(l=>re.test(l))}else if(/^head/.test(p))lines=lines.slice(0,10);else if(/^wc\s+-l/.test(p))lines=[String(lines.length)];else{T.err(`bash: ${p.split(' ')[0]}: ${tx('sim.pipe')}`);return}}lines.forEach(l=>T.out(l));return}
   await runCmd(line,T.out);
 }
 async function runCmd(line,out){
   let m;const w=line.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)||[];let sudo=false;if(w[0]==='sudo'){sudo=true;w.shift()}const cmd=w[0],args=w.slice(1).map(a=>a.replace(/^["']|["']$/g,''));
   const flag=f=>args.includes(f);
   switch(cmd){
-    case 'help':return out(HELP);
+    case 'help':return out(HELP.replace('Commands you can try:',tx('sim.help')));
     case 'clear':termOut.innerHTML='';return;
     case 'pwd':return out('/'+SH.cwd.join('/'));
     case 'whoami':return out(sudo?'root':'pi');
@@ -1468,11 +1506,11 @@ Swap:          511Mi          0B       511Mi`);
       const h=names.map(k=>n.c[k].type==='dir'?`<span style="color:var(--term-path);font-weight:600">${esc(k)}</span>`:/\.py$/.test(k)?`<span style="color:var(--term-prompt)">${esc(k)}</span>`:esc(k)).join('  ');if(out===T.out){Scene.act();T.html(h||'')}else out(names.join('  '));return}
     case 'cd':{const target=args[0]||'~';const parts=SH.resolve(target);const n=SH.node(parts);if(!n)return T.err(`bash: cd: ${target}: No such file or directory`);if(n.type!=='dir')return T.err(`bash: cd: ${target}: Not a directory`);SH.cwd=parts;updatePrompt();return}
     case 'cat':case 'less':case 'more':{if(!args.length)return T.err(`${cmd}: missing file operand`);for(const a of args){syncProjects();const n=SH.node(SH.resolve(a));if(!n)T.err(`${cmd}: ${a}: No such file or directory`);else if(n.type==='dir')T.err(`${cmd}: ${a}: Is a directory`);else out((n.content||'').replace(/\n$/,''))}return}
-    case 'nano':case 'vi':case 'vim':{const a=args[0];if(!a)return T.err(`${cmd}: needs a file name`);syncProjects();const n=SH.node(SH.resolve(a));T.dim(`${cmd} is a full-screen editor. On a real Pi it opens here; in this simulator, edit .py files in the Code tab.`);if(n&&n.type==='file')out((n.content||'').replace(/\n$/,''));return}
+    case 'nano':case 'vi':case 'vim':{const a=args[0];if(!a)return T.err(`${cmd}: needs a file name`);syncProjects();const n=SH.node(SH.resolve(a));T.dim(tx('sim.nano',{cmd}));if(n&&n.type==='file')out((n.content||'').replace(/\n$/,''));return}
     case 'mkdir':case 'touch':{if(!args.length)return T.err(`${cmd}: missing operand`);for(const a of args.filter(x=>!x.startsWith('-'))){const parts=SH.resolve(a);const dir=SH.node(parts.slice(0,-1));if(!dir||dir.type!=='dir'){T.err(`${cmd}: cannot create '${a}': No such file or directory`);continue}if(!canWrite(parts,sudo)){T.err(`${cmd}: cannot create '${a}': Permission denied`);continue}const nm=parts[parts.length-1];if(dir.c[nm]){if(cmd==='mkdir')T.err(`mkdir: cannot create directory '${a}': File exists`);continue}dir.c[nm]=cmd==='mkdir'?{type:'dir',c:{}}:{type:'file',content:''}}return}
-    case 'rm':case 'rmdir':{const rec=args.some(a=>/^-\w*r/.test(a));for(const a of args.filter(x=>!x.startsWith('-'))){const parts=SH.resolve(a);const dir=SH.node(parts.slice(0,-1));const nm=parts[parts.length-1];const n=dir&&dir.c[nm];if(!n){T.err(`${cmd}: cannot remove '${a}': No such file or directory`);continue}if(!canWrite(parts,sudo)){T.err(`${cmd}: cannot remove '${a}': Permission denied`);continue}if(n.type==='dir'&&!rec&&cmd==='rm'){T.err(`rm: cannot remove '${a}': Is a directory`);continue}if(n.lesson){T.dim(`(${a} belongs to a lesson, so the simulator keeps it.)`);continue}delete dir.c[nm]}return}
+    case 'rm':case 'rmdir':{const rec=args.some(a=>/^-\w*r/.test(a));for(const a of args.filter(x=>!x.startsWith('-'))){const parts=SH.resolve(a);const dir=SH.node(parts.slice(0,-1));const nm=parts[parts.length-1];const n=dir&&dir.c[nm];if(!n){T.err(`${cmd}: cannot remove '${a}': No such file or directory`);continue}if(!canWrite(parts,sudo)){T.err(`${cmd}: cannot remove '${a}': Permission denied`);continue}if(n.type==='dir'&&!rec&&cmd==='rm'){T.err(`rm: cannot remove '${a}': Is a directory`);continue}if(n.lesson){T.dim(tx('sim.keep',{a}));continue}delete dir.c[nm]}return}
     case 'cp':case 'mv':{if(args.length<2)return T.err(`${cmd}: missing destination file operand`);syncProjects();const src=SH.resolve(args[0]),dst=SH.resolve(args[1]);const s=SH.node(src);if(!s)return T.err(`${cmd}: cannot stat '${args[0]}': No such file or directory`);let dd=SH.node(dst);let dir,nm;if(dd&&dd.type==='dir'){dir=dd;nm=src[src.length-1]}else{dir=SH.node(dst.slice(0,-1));nm=dst[dst.length-1]}if(!dir)return T.err(`${cmd}: cannot create '${args[1]}': No such file or directory`);dir.c[nm]=JSON.parse(JSON.stringify(s));delete dir.c[nm].lesson;if(cmd==='mv'&&!s.lesson){delete SH.node(src.slice(0,-1)).c[src[src.length-1]]}return}
-    case 'python3':case 'python':{if(flag('--version')||flag('-V'))return out('Python 3.13.5');if(!args.length){T.dim('Interactive Python isn\'t available here. Run a file: python3 blink.py');return}return runFile(args[0])}
+    case 'python3':case 'python':{if(flag('--version')||flag('-V'))return out('Python 3.13.5');if(!args.length){T.dim(tx('sim.repl'));return}return runFile(args[0])}
     case 'pinout':return out(pinoutText());
     case 'vcgencmd':{if(args[0]==='measure_temp')return out(`temp=${(46+Math.random()*6+(RUN.interp?3:0)).toFixed(1)}'C`);if(args[0]==='get_throttled')return out('throttled=0x0');if(args[0]==='measure_clock')return out('frequency(0)=2400000000');return T.err('vcgencmd: try measure_temp or get_throttled')}
     case 'apt':case 'apt-get':{if(!sudo){T.err('E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)');T.err('E: Are you root? Try again with sudo.');return}
@@ -1493,14 +1531,14 @@ Swap:          511Mi          0B       511Mi`);
 (On a real Pi this is an interactive menu. Use the arrow keys and Enter.)`)}
     case 'systemctl':return systemctl(args,sudo,out);
     case 'journalctl':{if(!SH.journal.length)return out('-- No entries --');SH.journal.slice(-12).forEach(l=>out(l));return}
-    case 'reboot':case 'shutdown':{if(!sudo)return T.err(`${cmd}: must be run as root. Try sudo ${cmd}`);if(cmd==='shutdown'&&!line.includes('-r')){await stopRun(true);T.dim('The system will power off now. (The simulator turns it back on for you.)');}return reboot()}
-    case 'rpicam-hello':case 'rpicam-still':case 'rpicam-vid':case 'libcamera-still':case 'libcamera-hello':{if(cmd.startsWith('libcamera')){T.warn(`${cmd} has been renamed. Use ${cmd.replace('libcamera','rpicam')} instead.`);return}if(!Scene.wiring.camera){T.err('ERROR: *** no cameras available ***');T.dim('Open the "Take a photo" lesson to connect a camera.');return}
+    case 'reboot':case 'shutdown':{if(!sudo)return T.err(`${cmd}: must be run as root. Try sudo ${cmd}`);if(cmd==='shutdown'&&!line.includes('-r')){await stopRun(true);T.dim(tx('sim.poweroff'));}return reboot()}
+    case 'rpicam-hello':case 'rpicam-still':case 'rpicam-vid':case 'libcamera-still':case 'libcamera-hello':{if(cmd.startsWith('libcamera')){T.warn(tx('sim.renamed',{cmd,to:cmd.replace('libcamera','rpicam')}));return}if(!Scene.wiring.camera){T.err('ERROR: *** no cameras available ***');T.dim(tx('sim.noCam'));return}
       out('[0:01:23.456789] [2104]  INFO Camera camera_manager.cpp:327 libcamera v0.5.1+rpt');out('Made DRM preview window');out(`Mode selection for 2304:1296:12:P`);
-      if(cmd==='rpicam-hello'){T.dim('Preview running for 5 seconds…');await sleepMs(1200);out('Closed preview window');return}
-      const o=args[args.indexOf('-o')+1]||(cmd==='rpicam-vid'?'video.h264':null);if(cmd==='rpicam-still'&&!flag('-o'))T.dim('Tip: add -o photo.jpg to save the picture.');await sleepMs(900);if(cmd==='rpicam-still'){Scene.flash()}if(o){FSops.addFile(o,cmd==='rpicam-vid'?'(H.264 video)':'(JPEG image, 4608 × 2592)');out(`Still capture image received`);T.ok(`Saved ${o} in ${SH.pretty()==='~/projects'?'this folder':'~/projects'}`)}return}
-    case 'ssh':return T.dim('You are already logged in to raspberrypi. From another computer you would run: ssh pi@raspberrypi.local');
-    case 'man':return T.dim(`man pages aren't installed in this simulator. Try ${args[0]||'ls'} --help on a real Pi.`);
-    case 'exit':case 'logout':T.dim('logout');T.dim('Connection to raspberrypi closed. Reconnected.');return;
+      if(cmd==='rpicam-hello'){T.dim(tx('sim.preview'));await sleepMs(1200);out('Closed preview window');return}
+      const o=args[args.indexOf('-o')+1]||(cmd==='rpicam-vid'?'video.h264':null);if(cmd==='rpicam-still'&&!flag('-o'))T.dim(tx('sim.tipO'));await sleepMs(900);if(cmd==='rpicam-still'){Scene.flash()}if(o){FSops.addFile(o,cmd==='rpicam-vid'?'(H.264 video)':'(JPEG image, 4608 × 2592)');out(`Still capture image received`);T.ok(tx('sim.saved',{o,where:SH.pretty()==='~/projects'?tx('sim.thisFolder'):'~/projects'}))}return}
+    case 'ssh':return T.dim(tx('sim.ssh'));
+    case 'man':return T.dim(tx('sim.man',{cmd:args[0]||'ls'}));
+    case 'exit':case 'logout':T.dim('logout');T.dim('Connection to raspberrypi closed. '+tx('sim.reconnected'));return;
     case 'ping':return out(`PING ${args.filter(a=>!a.startsWith('-'))[0]||'raspberrypi.local'}: 56 data bytes\n64 bytes: icmp_seq=1 ttl=64 time=0.42 ms\n64 bytes: icmp_seq=2 ttl=64 time=0.39 ms`);
     case 'pinctrl':{const g=+(args.find(a=>/^\d+$/.test(a))??17);const on=RUN.interp&&RUN.interp.used[g]?RUN.interp.used[g].value>0:false;return out(`${String(g).padStart(2)}: op dl pn | ${on?'hi':'lo'} // GPIO${g} = output`)}
     default:{if(/^(\.\/|~\/|\/)/.test(cmd)&&cmd.endsWith('.py'))return T.err(`bash: ${cmd}: Permission denied. Run it with python3 ${cmd}`);return T.err(`bash: ${cmd}: command not found`)}
@@ -1534,7 +1572,7 @@ async function startService(){if(SH.svc.active)return;await stopRun(true);SH.svc
   RUN.interp=interp;RUN.service=true;setStatus('running','blink.service');
   const code=store.get('code:blink',null)||BLINK_CODE;const r=await interp.run(code);interp.cleanupOutputs();if(RUN.interp===interp){RUN.interp=null;RUN.service=false;setStatus(r==='error'?'error':'stopped')}SH.svc.active=false;if(r==='error')jlog('systemd[1]: blink.service: Failed with result \'exit-code\'.')}
 function stopService(){if(RUN.service&&RUN.interp){RUN.interp.stop()}SH.svc.active=false;jlog('systemd[1]: Stopped blink.service - Blink an LED.')}
-async function reboot(){await stopRun(true);SH.busy=true;termInput.disabled=true;T.dim('Connection to raspberrypi closed by remote host.');Scene.power(false);Scene.resetOutputs();await sleepMs(900);Scene.power(true);for(let i=0;i<6;i++){Scene.act();await sleepMs(220)}await sleepMs(500);T.ok('Raspberry Pi OS booted. Logged back in as pi.');SH.cwd=['home','pi'];updatePrompt();SH.busy=false;termInput.disabled=false;termInput.focus({preventScroll:true});if(SH.svc.enabled){T.dim('systemd started blink.service at boot.');startService()}}
+async function reboot(){await stopRun(true);SH.busy=true;termInput.disabled=true;T.dim('Connection to raspberrypi closed by remote host.');Scene.power(false);Scene.resetOutputs();await sleepMs(900);Scene.power(true);for(let i=0;i<6;i++){Scene.act();await sleepMs(220)}await sleepMs(500);T.ok(tx('sim.booted'));SH.cwd=['home','pi'];updatePrompt();SH.busy=false;termInput.disabled=false;termInput.focus({preventScroll:true});if(SH.svc.enabled){T.dim(tx('sim.svcBoot'));startService()}}
 
 /* ---------- Run control ---------- */
 const RUN={interp:null,service:false};
@@ -1546,7 +1584,7 @@ async function runFile(name){const l=CUR();const base=name.split('/').pop();
   if(RUN.interp)return T.err('Another program is still running. Stop it first.');
   const owner=LESSONS.find(x=>x.file===base);
   if(!owner){syncProjects();const n=SH.node(SH.resolve(name));if(!n)return T.err(`python3: can't open file '/home/pi/${name}': [Errno 2] No such file or directory`);if(!/\.py$/.test(base))return T.err('python3: that is not a Python file');return runCode(n.content,base,true)}
-  if(owner.id!==l.id){T.dim(`${base} is wired up in lesson ${owner.n}, "${owner.title}". Open that lesson to run it on its circuit.`);return}
+  if(owner.id!==l.id){T.dim(tx('sim.owner',{file:base,n:owner.n,title:owner.title}));return}
   return runCode(getCode(l),base,true)}
 async function runCode(code,file,fromTerm){
   if(RUN.interp){await stopRun(false);return}
@@ -1599,7 +1637,7 @@ function usedByLesson(n){const row=(CUR().wiring||[]).find(r=>r[0]===n);return r
 const vp=$('#viewport'),tilt=$('#tilt');
 const DEFAULT_VIEW={rx:34,rz:-12,z:1};
 const view={...DEFAULT_VIEW};let PREF_RM=false;try{PREF_RM=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
-let SETTINGS={sound:store.get('sound',false),tilt:store.get('tilt',true),flat:store.get('flat',false),callouts:store.get('callouts',true),flow:store.get('flow',true),grid:store.get('grid',true),turn:store.get('turn',false),motion:store.get('motion',PREF_RM)};
+let SETTINGS={sound:store.get('sound',false),tilt:store.get('tilt',true),flat:store.get('flat',false),callouts:store.get('callouts',true),flow:store.get('flow',true),grid:store.get('grid',true),turn:store.get('turn',false),motion:store.get('motion',PREF_RM),theme:store.get('theme','auto')};
 function applyView(){const rx=SETTINGS.tilt?view.rx:0,rz=SETTINGS.tilt?view.rz:0;tilt.style.transform=`scale(${view.z}) rotateX(${rx}deg) rotateZ(${rz}deg)`}
 const ptrs=new Map();let drag=null,pinch=null,pressedBtn=null;
 vp.addEventListener('pointerdown',e=>{const hit=e.target.closest('[data-hit]');
@@ -2058,7 +2096,7 @@ async function openLesson(i,keepTab){if(i<0||i>=LESSONS.length)return;await stop
   $('#eyebrow').textContent=t('panel.eyebrow',{group:t('group.'+l.group),n:l.n,total:LESSONS.length});$('#lessonTitle').textContent=l.title;
   XP.close();Scene.load(l);renderControls(l);setStatus('stopped');renderProgress();renderTab();
   $('#prevBtn').disabled=i===0;$('#nextBtn').textContent=i===LESSONS.length-1?t('foot.finish'):t('foot.next');
-  T.line(`── ${t('term.lesson',{n:l.n,title:l.title})} ──`,'rule');syncProjects();
+  if(T._lastRule!==l.id){T.line(`── ${t('term.lesson',{n:l.n,title:l.title})} ──`,'rule');T._lastRule=l.id}syncProjects();
   try{history.replaceState(null,'','#'+l.id)}catch(e){}
   renderDrawerIfOpen();$('#pBody').scrollTop=0}
 $$('#tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderTab()});
@@ -2068,8 +2106,8 @@ $('#doneBtn').onclick=()=>{const id=CUR().id;done.has(id)?done.delete(id):done.a
 $('#allLessons').onclick=()=>openDrawer('lessons');
 
 /* ---------- Terminal input ---------- */
-async function typeCommand(c){if(SH.busy)return;if(RUN.interp&&!RUN.service){T.warn('A program is running. Stop it first.');return}termInput.value='';T.cmd(c);await shell(c);termInput.focus({preventScroll:true})}
-$('#termForm').addEventListener('submit',async e=>{e.preventDefault();if(SH.busy)return;const v=termInput.value;termInput.value='';if(RUN.interp&&!RUN.service){T.warn('A program is running. Press Ctrl+C or Stop first.');return}T.cmd(v);await shell(v)});
+async function typeCommand(c){if(SH.busy)return;if(RUN.interp&&!RUN.service){T.warn(tx('sim.busy'));return}termInput.value='';T.cmd(c);await shell(c);termInput.focus({preventScroll:true})}
+$('#termForm').addEventListener('submit',async e=>{e.preventDefault();if(SH.busy)return;const v=termInput.value;termInput.value='';if(RUN.interp&&!RUN.service){T.warn(tx('sim.busyCtrlC'));return}T.cmd(v);await shell(v)});
 termInput.addEventListener('keydown',e=>{
   if(e.ctrlKey&&(e.key==='c'||e.key==='C')){if(RUN.interp){e.preventDefault();stopRun(false)}else if(!termInput.value||termInput.selectionStart===termInput.selectionEnd){e.preventDefault();T.cmd(termInput.value+'^C');termInput.value=''}return}
   if(e.ctrlKey&&(e.key==='l'||e.key==='L')){e.preventDefault();termOut.innerHTML='';return}
@@ -2323,10 +2361,20 @@ async function setLang(code,quiet){if(!LANGS.some(l=>l[0]===code))code='en';let 
   if(code!=='en'){d=LANG_CACHE[code];if(!d){try{const r=await fetch('i18n/'+code+'.json');if(!r.ok)throw new Error(r.status);d=await r.json();LANG_CACHE[code]=d}catch(e){if(!quiet)T.err(t('set.langFail'));return false}}}
   LANG=code;UI=(d&&d.ui)||{};applyContent(d);document.documentElement.lang=code;store.set('lang',code);applyStatic();return true}
 function applyStatic(){$$('[data-i18n]').forEach(e=>{e.textContent=t(e.dataset.i18n)});$$('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.i18nAria)));$$('[data-i18n-title]').forEach(e=>{e.title=t(e.dataset.i18nTitle)});
-  const lc=$('#langCode');if(lc)lc.textContent=LANG.toUpperCase();termInput.setAttribute('aria-label',t('term.label'));updateHint();try{setStatus(RUN.interp?'running':'stopped')}catch(e){}}
+  const lc=$('#langCode');if(lc)lc.textContent=LANG.toUpperCase();termInput.setAttribute('aria-label',t('term.label'));updateHint();applyUITheme();try{setStatus(RUN.interp?'running':'stopped')}catch(e){}}
 function updateHint(){let coarse=false;try{coarse=matchMedia('(pointer: coarse)').matches}catch(e){}$('#hint').textContent=MODE==='3d'?t(coarse?'hint.3dTouch':'hint.3d'):t('hint.2d')}
 function applyGrid(){$('#stage').classList.toggle('no-dots',MODE==='3d'||!SETTINGS.grid);if(Scene3D.ok)Scene3D.setGrid(SETTINGS.grid)}
 function applyMotion(){document.documentElement.classList.toggle('reduce-motion',!!SETTINGS.motion)}
+
+/* ---------- Theme: auto (follows the device), light or dark ---------- */
+function sysDark(){try{return matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}}
+function themeIsDark(){return SETTINGS.theme==='dark'||(SETTINGS.theme!=='light'&&sysDark())}
+function applyUITheme(){const r=document.documentElement,th=SETTINGS.theme;if(th==='light'||th==='dark')r.setAttribute('data-theme',th);else r.removeAttribute('data-theme');
+  const dark=themeIsDark();$$('meta[name="theme-color"]').forEach(m=>{if(!m.dataset.orig)m.dataset.orig=m.getAttribute('media')||'';if(th==='light'||th==='dark'){m.removeAttribute('media');m.content=dark?'#0f161d':'#d9e0e7'}else{if(m.dataset.orig)m.setAttribute('media',m.dataset.orig);m.content=/dark/.test(m.dataset.orig)?'#0f161d':'#d9e0e7'}});
+  const b=$('#themeBtn');if(b){b.classList.toggle('is-dark',dark);const l=t(dark?'nav.toLight':'nav.toDark');b.title=l;b.setAttribute('aria-label',l)}
+  $$('.seg [data-th]').forEach(x=>x.setAttribute('aria-checked',x.dataset.th===(th||'auto')))}
+function setTheme(th){SETTINGS.theme=th;store.set('theme',th);applyUITheme()}
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(SETTINGS.theme==='auto')applyUITheme()})}catch(e){}
 const GH_URL='https://github.com/florars3';
 function creditHTML(){return `<p class="set-credit">${esc(t('credit.madeBy'))} <a href="${GH_URL}" target="_blank" rel="noopener">Ripudaman Flora</a> · <a href="${GH_URL}" target="_blank" rel="noopener">github.com/florars3</a></p>`}
 
@@ -2340,14 +2388,14 @@ function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p c
     $$('[data-lang]',b).forEach(x=>x.onclick=async()=>{if(x.dataset.lang===LANG)return;x.classList.add('loading');const ok=await setLang(x.dataset.lang);if(ok){await stopRun(true);await openLesson(cur,true);renderDrawer()}else{x.classList.remove('loading');b.insertAdjacentHTML('afterbegin',`<div class="callout warn">${esc(t('set.langFail'))}</div>`)}})}
   if(drawerView==='settings'){tt.textContent=t('set.title');const no3=NO3D||!window.THREE,only=MODE==='3d'?'':' '+t('set.only3d'),curL=LANGS.find(l=>l[0]===LANG)||LANGS[0];
     const sw=(id,on,label,sub,dis)=>`<div class="setting"><div><b>${esc(label)}</b><span>${esc(sub)}</span></div><button class="switch" role="switch" id="${id}" aria-checked="${!!on}" aria-label="${esc(label)}"${dis?' disabled':''}></button></div>`;
-    b.innerHTML=`<div class="setting"><div><b>${esc(t('set.lang'))}</b><span>${esc(t('set.langSub'))}</span></div><button class="btn small lang-pick" id="sLang">${esc(curL[1])} <span aria-hidden="true">▾</span></button></div>`
+    b.innerHTML=`<div class="setting"><div><b>${esc(t('set.theme'))}</b><span>${esc(t('set.themeSub'))}</span></div><div class="seg" role="radiogroup" aria-label="${esc(t('set.theme'))}">${['auto','light','dark'].map(k=>`<button role="radio" data-th="${k}" aria-checked="${SETTINGS.theme===k}">${esc(t('set.th'+k[0].toUpperCase()+k.slice(1)))}</button>`).join('')}</div></div><div class="setting"><div><b>${esc(t('set.lang'))}</b><span>${esc(t('set.langSub'))}</span></div><button class="btn small lang-pick" id="sLang">${esc(curL[1])} <span aria-hidden="true">▾</span></button></div>`
       +sw('sCo',SETTINGS.callouts,t('set.callouts'),t('set.calloutsSub')+only)+sw('sFlow',SETTINGS.flow,t('set.flow'),t('set.flowSub')+only)+sw('sGrid',SETTINGS.grid,t('set.grid'),t('set.gridSub'))
       +sw('sTurn',SETTINGS.turn,t('set.turn'),t('set.turnSub')+only)+sw('sSound',SETTINGS.sound,t('set.sound'),t('set.soundSub'))+sw('sMotion',SETTINGS.motion,t('set.motion'),t('set.motionSub'))
       +sw('sFlat',MODE==='3d',t('set.3d'),no3?t('set.3dNA'):t('set.3dSub'),no3)+sw('sTilt',SETTINGS.tilt,t('set.angled'),t('set.angledSub'))
       +`<div class="setting"><div><b>${esc(t('set.reset'))}</b><span>${esc(t('set.resetSub'))}</span></div><button class="btn small reset-btn" id="sReset">${esc(t('set.reset'))}</button></div>
       <p class="set-note">${esc(t('set.saved'))}</p><p class="set-note">${esc(t('set.unofficial'))}</p>${creditHTML()}`;
     const tog=(id,key,after)=>{$('#'+id).onclick=e=>{SETTINGS[key]=!SETTINGS[key];store.set(key,SETTINGS[key]);e.currentTarget.setAttribute('aria-checked',SETTINGS[key]);if(after)after()}};
-    $('#sLang').onclick=()=>{drawerView='lang';renderDrawer()};
+    $('#sLang').onclick=()=>{drawerView='lang';renderDrawer()};$$('.seg [data-th]',b).forEach(x=>x.onclick=()=>setTheme(x.dataset.th));
     tog('sCo','callouts',()=>{if(Scene3D.ok)Scene3D.setCallouts(SETTINGS.callouts)});tog('sFlow','flow');tog('sGrid','grid',applyGrid);tog('sTurn','turn',()=>{if(Scene3D.ok)Scene3D.poke()});
     tog('sSound','sound',()=>{if(SETTINGS.sound)Audio_.ensure();try{Audio_.ctx&&Audio_.ctx.resume()}catch(_){}});tog('sMotion','motion',applyMotion);tog('sTilt','tilt',()=>Scene.setTilt(SETTINGS.tilt));
     $('#sFlat').onclick=async()=>{SETTINGS.flat=MODE==='3d';store.set('flat',SETTINGS.flat);await stopRun(true);setMode(SETTINGS.flat?'2d':'3d');await openLesson(cur,true);renderDrawer()};
@@ -2356,7 +2404,7 @@ function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p c
 
 /* ---------- Boot ---------- */
 (function init(){
-  applyMotion();const savedLang=store.get('lang',null);let nav='en';try{nav=(navigator.language||'en').slice(0,2).toLowerCase()}catch(e){}
+  applyMotion();applyUITheme();$('#themeBtn').onclick=()=>setTheme(themeIsDark()?'light':'dark');const savedLang=store.get('lang',null);let nav='en';try{nav=(navigator.language||'en').slice(0,2).toLowerCase()}catch(e){}
   const wantLang=savedLang||(LANGS.some(l=>l[0]===nav)?nav:'en');
 
   let start=0;const hash=(location.hash||'').slice(1);const byHash=LESSONS.findIndex(l=>l.id===hash);const saved=LESSONS.findIndex(l=>l.id===store.get('cur',''));
@@ -2366,5 +2414,6 @@ function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p c
 })();
 </script>
 
+<script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))</script>
 </body>
 </html>
