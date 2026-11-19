@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://gpio-lab.vercel.app/</loc><lastmod>2026-11-19</lastmod><priority>1.0</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/meet</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/setup</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/terminal</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/pinout</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/blink</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/traffic</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/fade</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/buzzer</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/button</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/toggle</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/motion</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/distance</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/servo</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/camera</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/web</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://gpio-lab.vercel.app/boot</loc><lastmod>2026-11-19</lastmod><priority>0.8</priority></url>
+</urlset>

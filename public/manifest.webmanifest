@@ -1,15 +1,28 @@
 {
-  "name": "Learn Raspberry Pi",
-  "short_name": "Learn Pi",
-  "description": "A Raspberry Pi in your browser: wire circuits on a 3D Pi 5, write Python and run it. 16 free beginner lessons.",
+  "name": "GPIO Lab",
+  "short_name": "GPIO Lab",
+  "description": "Learn Raspberry Pi electronics in your browser: wire circuits on a 3D Raspberry Pi 5, write Python and run it. 16 free beginner lessons.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#d9e0e7",
   "theme_color": "#1e6a45",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

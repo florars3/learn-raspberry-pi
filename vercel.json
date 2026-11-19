@@ -43,5 +43,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "learn-raspberry-pi.vercel.app"
+        }
+      ],
+      "destination": "https://gpio-lab.vercel.app/:path*",
+      "permanent": true
+    }
   ]
 }

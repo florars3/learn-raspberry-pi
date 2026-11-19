@@ -3,26 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Learn Raspberry Pi</title>
+<title>GPIO Lab: learn Raspberry Pi electronics in your browser</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <script>try{var th=JSON.parse(localStorage.getItem('lrp:theme'));if(th==='light'||th==='dark')document.documentElement.setAttribute('data-theme',th)}catch(e){}</script>
 <meta name="author" content="Ripudaman Flora">
-<meta name="description" content="A Raspberry Pi in your browser, no hardware needed. Wire LEDs, buttons, sensors and a servo on a 3D Raspberry Pi 5, write Python, run it in a simulated terminal, and step through how it all works. 16 free beginner lessons in 10 languages. Made by Ripudaman Flora.">
+<meta name="description" content="GPIO Lab: learn Raspberry Pi electronics in your browser, no hardware needed. Wire LEDs, buttons, sensors and a servo on a 3D Raspberry Pi 5, write Python, run it in a simulated terminal, and step through how it all works. 16 free beginner lessons in 10 languages. Made by Ripudaman Flora.">
 <meta name="theme-color" content="#d9e0e7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f161d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="apple-mobile-web-app-title" content="Learn Pi">
-<link rel="canonical" href="https://learn-raspberry-pi.vercel.app/">
+<meta name="apple-mobile-web-app-title" content="GPIO Lab">
+<link rel="canonical" href="https://gpio-lab.vercel.app/">
+<script>window.SITE_PATHS=1</script>
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Learn Raspberry Pi">
-<meta property="og:title" content="Learn Raspberry Pi: a Pi in your browser">
-<meta property="og:description" content="A Raspberry Pi in your browser, no hardware needed. Wire LEDs, buttons, sensors and a servo on a 3D Raspberry Pi 5, write Python, run it in a simulated terminal, and step through how it all works. 16 free beginner lessons in 10 languages. Made by Ripudaman Flora.">
-<meta property="og:url" content="https://learn-raspberry-pi.vercel.app/">
-<meta property="og:image" content="https://learn-raspberry-pi.vercel.app/og-image.png">
+<meta property="og:site_name" content="GPIO Lab">
+<meta property="og:title" content="GPIO Lab: learn Raspberry Pi electronics in your browser">
+<meta property="og:description" content="GPIO Lab: learn Raspberry Pi electronics in your browser, no hardware needed. Wire LEDs, buttons, sensors and a servo on a 3D Raspberry Pi 5, write Python, run it in a simulated terminal, and step through how it all works. 16 free beginner lessons in 10 languages. Made by Ripudaman Flora.">
+<meta property="og:url" content="https://gpio-lab.vercel.app/">
+<meta property="og:image" content="https://gpio-lab.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A 3D Raspberry Pi 5 wired to a breadboard with three lit LEDs, next to a lesson panel and a terminal">
@@ -462,6 +463,18 @@ html:not(.reduce-motion) body,html:not(.reduce-motion) .panel,html:not(.reduce-m
   .mhead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 10px}
   .mhead .pcard{grid-column:1 / -1;width:auto}
 }
+.hero-sub{margin:0 0 6px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+@media (max-width: 980px){.hero-sub{display:none}}
+.toast{position:fixed;left:50%;bottom:24px;z-index:70;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 32px);padding:10px 12px 10px 16px;border-radius:14px;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 10px 30px color-mix(in srgb, var(--shadow) 70%, transparent);transform:translate(-50%,14px);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast b{font-size:14px}
+.toast-act{display:flex;align-items:center;gap:6px}
+.toast-share{background:var(--accent);border-color:var(--accent);color:var(--accent-ink, #fff)}
+.toast-x{border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:2px 6px;cursor:pointer;border-radius:6px}
+.toast-x:hover{color:var(--ink)}
+html.reduce-motion .toast{transition:none}
+@media (max-width: 980px){.toast{bottom:calc(86px + env(safe-area-inset-bottom, 0px))}}
+@media (max-width: 600px){.toast{bottom:calc(74px + env(safe-area-inset-bottom, 0px));left:12px;right:12px;max-width:none;transform:translateY(14px);flex-wrap:nowrap;justify-content:space-between;gap:8px;padding:10px 8px 10px 14px}.toast.on{transform:none}.toast b{font-size:13px}}
 </style>
 
 <div class="app">
@@ -469,7 +482,7 @@ html:not(.reduce-motion) body,html:not(.reduce-motion) .panel,html:not(.reduce-m
     <div class="mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24"><g fill="#d6b25b"><rect x="4" y="5" width="3" height="3" rx=".6"/><rect x="10.5" y="5" width="3" height="3" rx=".6"/><rect x="17" y="5" width="3" height="3" rx=".6"/><rect x="4" y="10.5" width="3" height="3" rx=".6"/><rect x="10.5" y="10.5" width="3" height="3" rx=".6"/><rect x="17" y="10.5" width="3" height="3" rx=".6"/></g><path d="M5.5 16.5v3M12 16.5v3M18.5 16.5v3" stroke="#e9f2ec" stroke-width="1.6" stroke-linecap="round"/></svg>
     </div>
-    <div class="mh-t"><b>Learn <span>Raspberry Pi</span></b><small><span data-i18n="hero.tag0">No Pi needed</span> · <span data-i18n="hero.tag1">Wire it</span> · <span data-i18n="hero.tag2">Code it</span> · <span data-i18n="hero.tag3">Run it</span></small></div>
+    <div class="mh-t"><b>GPIO <span>Lab</span></b><small data-i18n="hero.sub">Learn Raspberry Pi electronics in your browser</small></div>
     <button class="pcard" type="button" data-pcard><svg class="pc-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5c2.8-1 5.6-1 8.5.8 2.9-1.8 5.7-1.8 8.5-.8v13c-2.8-1-5.6-1-8.5.8-2.9-1.8-5.7-1.8-8.5-.8z"/><path d="M12 6.3v13.3"/></svg><span class="pc-t"><b class="pc-g">Basics</b><span class="pc-bar"><i></i></span></span><span class="pc-n">0/16</span></button>
   </header>
   <nav class="rail" aria-label="Main">
@@ -494,7 +507,8 @@ html:not(.reduce-motion) body,html:not(.reduce-motion) .panel,html:not(.reduce-m
     <div class="labels3d" id="labels3d" hidden></div>
     <div class="viewport" id="viewport"><div class="tilt" id="tilt"><svg id="scene" viewBox="0 -40 900 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Raspberry Pi 5 and breadboard"></svg></div></div>
     <div class="hero">
-      <h1>Learn <span>Raspberry Pi</span></h1>
+      <p class="hero-sub" data-i18n="hero.sub">Learn Raspberry Pi electronics in your browser</p>
+      <h1>GPIO <span>Lab</span></h1>
       <p class="tag"><span data-i18n="hero.tag0">No Pi needed</span><i>·</i><span data-i18n="hero.tag1">Wire it</span><i>·</i><span data-i18n="hero.tag2">Code it</span><i>·</i><span data-i18n="hero.tag3">Run it</span></p>
       <p class="hint" id="hint">Drag to rotate · Scroll to zoom · Double-click to reset</p>
     </div>
@@ -601,7 +615,7 @@ const UI_EN={
 'set.angled':'Angled view','set.angledSub':'Off looks straight down at the board.','set.reset':'Reset progress','set.resetSub':'Clears the done marks and your edited code.','set.resetConfirm':'Tap again to confirm','set.cleared':'Cleared',
 'set.saved':'Progress and code are saved in this browser only.','set.unofficial':'An unofficial learning project. Not affiliated with or endorsed by Raspberry Pi Ltd. Raspberry Pi is a trademark of Raspberry Pi Ltd.',
 'set.langFail':'Couldn’t load that language. Check your connection and try again.','set.only3d':'Works with the 3D board.',
-'hdr.progress':'{group} · {done} of {total} lessons done. Open the lesson list.','nav.theme':'Theme','nav.toLight':'Switch to light theme','nav.toDark':'Switch to dark theme',
+'set.feedback':'Send feedback or report a bug','share.done':'Lesson {n} done. Nice work!','share.all':'All {n} lessons done. You did it!','share.btn':'Share','share.copy':'Copy link','share.text':'I just finished “{title}” on GPIO Lab, a free way to learn Raspberry Pi electronics in the browser.','hero.sub':'Learn Raspberry Pi electronics in your browser','hdr.progress':'{group} · {done} of {total} lessons done. Open the lesson list.','nav.theme':'Theme','nav.toLight':'Switch to light theme','nav.toDark':'Switch to dark theme',
 'set.theme':'Theme','set.themeSub':'Auto follows your device','set.thAuto':'Auto','set.thLight':'Light','set.thDark':'Dark',
 'sim.help':'Commands you can try:','sim.pipe':'not available in this simulator',
 'sim.nano':'{cmd} is a full-screen editor. On a real Pi it opens here; in this simulator, edit .py files in the Code tab.',
@@ -2172,12 +2186,12 @@ async function openLesson(i,keepTab){if(i<0||i>=LESSONS.length)return;await stop
   XP.close();Scene.load(l);renderControls(l);setStatus('stopped');renderProgress();renderTab();
   $('#prevBtn').disabled=i===0;$('#nextBtn').textContent=i===LESSONS.length-1?t('foot.finish'):t('foot.next');
   if(T._lastRule!==l.id){T.line(`── ${t('term.lesson',{n:l.n,title:l.title})} ──`,'rule');T._lastRule=l.id}syncProjects();
-  try{history.replaceState(null,'','#'+l.id)}catch(e){}
+  try{history.replaceState(null,'',window.SITE_PATHS?'/'+l.id+location.search:'#'+l.id)}catch(e){}
   renderDrawerIfOpen();$('#pBody').scrollTop=0}
 $$('#tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;renderTab()});
 $('#prevBtn').onclick=()=>openLesson(cur-1);
 $('#nextBtn').onclick=()=>{done.add(CUR().id);store.set('done',[...done]);if(cur===LESSONS.length-1){renderProgress();T.ok(t('term.allDone',{n:LESSONS.length}));return}openLesson(cur+1)};
-$('#doneBtn').onclick=()=>{const id=CUR().id;done.has(id)?done.delete(id):done.add(id);store.set('done',[...done]);renderProgress();renderDrawerIfOpen()};
+$('#doneBtn').onclick=()=>{const id=CUR().id;done.has(id)?done.delete(id):done.add(id);store.set('done',[...done]);renderProgress();renderDrawerIfOpen();if(done.has(id))showDoneToast(CUR());else hideDoneToast()};
 $('#allLessons').onclick=()=>openDrawer('lessons');
 
 /* ---------- Terminal input ---------- */
@@ -2451,7 +2465,7 @@ function applyUITheme(){const r=document.documentElement,th=SETTINGS.theme;if(th
 function setTheme(th){SETTINGS.theme=th;store.set('theme',th);applyUITheme()}
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(SETTINGS.theme==='auto')applyUITheme()})}catch(e){}
 const GH_URL='https://github.com/florars3';
-function creditHTML(){return `<p class="set-credit">${esc(t('credit.madeBy'))} <a href="${GH_URL}" target="_blank" rel="noopener">Ripudaman Flora</a> · <a href="${GH_URL}" target="_blank" rel="noopener">github.com/florars3</a></p>`}
+function creditHTML(){return `<p class="set-credit"><a href="https://github.com/florars3/gpio-lab/issues/new" target="_blank" rel="noopener">${esc(t('set.feedback'))} ↗</a></p><p class="set-credit">${esc(t('credit.madeBy'))} <a href="${GH_URL}" target="_blank" rel="noopener">Ripudaman Flora</a> · <a href="${GH_URL}" target="_blank" rel="noopener">github.com/florars3</a></p>`}
 
 function resetProgress(){done.clear();store.set('done',[]);LESSONS.forEach(l=>store.set('code:'+l.id,null));renderProgress();renderTab()}
 function bindReset(rb,after){rb.onclick=()=>{if(rb.dataset.armed){delete rb.dataset.armed;resetProgress();rb.textContent=t('set.cleared');rb.classList.remove('armed');if(after)setTimeout(after,900)}else{rb.dataset.armed='1';rb.classList.add('armed');rb.textContent=t('set.resetConfirm');setTimeout(()=>{if(rb.dataset.armed){delete rb.dataset.armed;rb.classList.remove('armed');rb.textContent=t('set.reset')}},3000)}}}
@@ -2483,12 +2497,23 @@ function renderDrawer(){const b=$('#dBody'),tt=$('#dTitle');const intro=s=>`<p c
 function renderPCards(){const l=CUR(),n=done.size,T_=LESSONS.length;$$('[data-pcard]').forEach(c=>{$('.pc-g',c).textContent=t('group.'+l.group);$('.pc-n',c).textContent=n+'/'+T_;$('.pc-bar i',c).style.width=(100*n/T_)+'%';
   const lbl=t('hdr.progress',{group:t('group.'+l.group),done:n,total:T_});c.title=lbl;c.setAttribute('aria-label',lbl)})}
 $$('[data-pcard]').forEach(c=>c.onclick=()=>openDrawer('lessons'));
+
+const SITE='https://gpio-lab.vercel.app';
+function shareLesson(l){const url=SITE+'/'+l.id,text=t('share.text',{title:l.title});
+  if(navigator.share){navigator.share({title:'GPIO Lab',text,url}).catch(()=>{})}
+  else window.open('https://x.com/intent/post?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank','noopener')}
+function hideDoneToast(){const el=$('#doneToast');if(el)el.classList.remove('on')}
+function showDoneToast(l){let el=$('#doneToast');if(!el){el=document.createElement('div');el.id='doneToast';el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}
+  const all=done.size===LESSONS.length;
+  el.innerHTML=`<b>${esc(all?t('share.all',{n:LESSONS.length}):t('share.done',{n:l.n}))}</b><span class="toast-act"><button class="btn small toast-share" data-a="share">${esc(t('share.btn'))}</button><button class="btn small" data-a="copy">${esc(t('share.copy'))}</button><button class="toast-x" data-a="x" aria-label="${esc(t('drawer.close'))}">×</button></span>`;
+  requestAnimationFrame(()=>el.classList.add('on'));clearTimeout(el._t);el._t=setTimeout(hideDoneToast,9000);
+  $('[data-a=share]',el).onclick=()=>shareLesson(l);$('[data-a=copy]',el).onclick=e=>copyText(SITE+'/'+l.id,e.currentTarget);$('[data-a=x]',el).onclick=hideDoneToast}
 /* ---------- Boot ---------- */
 (function init(){
   applyMotion();applyUITheme();$('#themeBtn').onclick=()=>setTheme(themeIsDark()?'light':'dark');const savedLang=store.get('lang',null);let nav='en';try{nav=(navigator.language||'en').slice(0,2).toLowerCase()}catch(e){}
   const wantLang=savedLang||(LANGS.some(l=>l[0]===nav)?nav:'en');
 
-  let start=0;const hash=(location.hash||'').slice(1);const byHash=LESSONS.findIndex(l=>l.id===hash);const saved=LESSONS.findIndex(l=>l.id===store.get('cur',''));
+  let start=0;const hash=(location.hash||'').slice(1);const pth=window.SITE_PATHS?location.pathname.replace(/^\/+|\/+$/g,''):'';const byHash=LESSONS.findIndex(l=>l.id===hash||(pth&&l.id===pth));const saved=LESSONS.findIndex(l=>l.id===store.get('cur',''));
   start=byHash>=0?byHash:saved>=0?saved:0;
   let started=false;const go=()=>{if(started)return;started=true;T.dim(t('term.welcome1'));T.dim(t('term.welcome2'));updatePrompt();setMode(SETTINGS.flat?'2d':'3d');applyStatic();openLesson(start)};
   if(wantLang==='en')go();else{setLang(wantLang,true).then(ok=>{if(started){if(ok)openLesson(cur,true)}else go()});setTimeout(go,2500)}

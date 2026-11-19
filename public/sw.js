@@ -1,7 +1,7 @@
 /* Learn Raspberry Pi: offline support.
    Pages: network first, cached copy when offline.
    Language files, icons, three.js and fonts: served from cache, refreshed in the background. */
-const V = 'lrp-v2';
+const V = 'lrp-v3';
 const CORE = ['/', '/favicon.svg', '/icon-192.png', '/manifest.webmanifest'];
 const CDN = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
